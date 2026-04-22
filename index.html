@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🎵 Music Compass</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js" crossorigin></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #080d1a; color: #e2e8f0; font-family: Georgia, 'Times New Roman', serif; }
@@ -19,7 +19,8 @@
 </head>
 <body>
 <div id="root"></div>
-<script type="text/babel">
+
+<script type="text/babel" data-presets="react,stage-2">
 const { useState } = React;
 
 const NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
@@ -176,17 +177,12 @@ function Piano({root,scaleNotes,acn}) {
 
 function Circle({sel,onSel,sn,acn}) {
   const R=130,rMaj=95,rMin=58,cx=145,cy=145;
-  const relMinRoot = sel ? RELATIVE_MINOR[sel] : null;
   return (
     <svg width={290} height={290} style={{display:'block',margin:'0 auto'}}>
-      {/* Outer ring */}
       <circle cx={cx} cy={cy} r={R} fill="#0a0f1e" stroke="#1e293b" strokeWidth={2}/>
-      {/* Separator between rings */}
       <circle cx={cx} cy={cy} r={76} fill="none" stroke="#1e293b" strokeWidth={1}/>
-      {/* Inner fill */}
       <circle cx={cx} cy={cy} r={40} fill="#0f172a"/>
       <text x={cx} y={cy+5} textAnchor="middle" fill="#334155" fontSize={10} fontWeight="bold">5ᵃˢ</text>
-
       {CIRCLE_OF_FIFTHS.map((key,i)=>{
         const rm=RELATIVE_MINOR[key];
         const a=(i/12)*2*Math.PI-Math.PI/2;
@@ -199,8 +195,6 @@ function Circle({sel,onSel,sn,acn}) {
           </g>
         );
       })}
-
-      {/* Major outer ring */}
       {CIRCLE_OF_FIFTHS.map((key,i)=>{
         const a=(i/12)*2*Math.PI-Math.PI/2;
         const x=cx+rMaj*Math.cos(a),y=cy+rMaj*Math.sin(a);
@@ -254,15 +248,12 @@ function App() {
         <h1 style={{margin:0,fontSize:24,fontWeight:700,background:'linear-gradient(90deg,#60a5fa,#a78bfa)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>🎵 Music Compass</h1>
         <p style={{margin:'4px 0 0',color:'#475569',fontSize:12}}>Basado en <em>Armonía Ilustrada</em> · Brian Callipari</p>
       </div>
-
       <div style={{maxWidth:860,margin:'0 auto',padding:'14px 12px'}}>
-
         <div style={{display:'flex',flexWrap:'wrap',gap:6,justifyContent:'center',marginBottom:12}}>
           {Object.entries(INSTRUMENTS).map(([k,v])=>(
             <button key={k} onClick={()=>setInst(k)} style={{...btnSm,fontWeight:inst===k?700:400,background:inst===k?'#1d4ed8':'#1e293b',border:`1px solid ${inst===k?'#3b82f6':'#334155'}`,color:inst===k?'#fff':'#94a3b8'}}>{v.name}</button>
           ))}
         </div>
-
         <div style={{background:'#0f172a',border:'1px solid #1e293b',borderRadius:12,padding:'12px 14px',marginBottom:12,display:'flex',flexWrap:'wrap',gap:12,alignItems:'center',justifyContent:'center'}}>
           <div style={{display:'flex',alignItems:'center',gap:10}}>
             <button onClick={()=>navKey(-1)} style={btnSm}>◀</button>
@@ -279,13 +270,11 @@ function App() {
             </select>
           </div>
         </div>
-
         <div style={{display:'flex',borderRadius:10,overflow:'hidden',border:'1px solid #1e293b',marginBottom:12}}>
           {[['harmony','🎼 Armonía'],['instrument','🎸 Instrumento'],['circle','⭕ Círculo']].map(([t,l])=>(
             <button key={t} onClick={()=>setTab(t)} style={bTab(tab===t)}>{l}</button>
           ))}
         </div>
-
         {tab==='harmony'&&(
           <div>
             <div style={{display:'flex',flexWrap:'wrap',gap:5,marginBottom:12}}>
@@ -300,4 +289,6 @@ function App() {
             </div>
             <div style={{display:'flex',flexWrap:'wrap',gap:8,justifyContent:'center',marginBottom:12}}>
               {ap.chords.map((c,i)=><ChordCard key={i} chord={c} isActive={cidx===i} onClick={()=>setCidx(cidx===i?null:i)}/>)}
-           
+            </div>
+            {ac&&(()=>{const c=FNC[ac.fn]||FNC.tonica;const notes=getCN(ac.root,ac.q);return(
+             
